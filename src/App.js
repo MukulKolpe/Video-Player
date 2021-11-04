@@ -1,12 +1,12 @@
-import "./App.css";
 import { useRef, useState } from "react";
+import "./App.css";
 
 function App() {
   const videoRef = useRef(null);
   const [playing, setPlaying] = useState(false);
-  const [videoTime, setVideoTime] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-
+  const [videoTime, setVideoTime] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   const videoHandler = (control) => {
     if (control === "play") {
@@ -27,11 +27,11 @@ function App() {
   const revert = () => {
     videoRef.current.currentTime -= 5;
   };
+
   window.setInterval(function () {
     setCurrentTime(videoRef.current?.currentTime);
-    
+    setProgress((videoRef.current?.currentTime / videoTime) * 100);
   }, 1000);
-
 
   return (
     <div className="app">
@@ -65,10 +65,9 @@ function App() {
               src="/play.svg"
             />
           )}
-
           <img
-            onClick={fastForward}
             className="controlsIcon"
+            onClick={fastForward}
             alt=""
             src="/forward-5.svg"
           />
@@ -76,18 +75,22 @@ function App() {
       </div>
 
       <div className="timecontrols">
-      <p className="controlsTime">
-    {Math.floor(currentTime / 60) + ":" + ("0" + Math.floor(currentTime % 60)).slice(-2)}
-</p>
-
-
+        <p className="controlsTime">
+          {Math.floor(currentTime / 60) +
+            ":" +
+            ("0" + Math.floor(currentTime % 60)).slice(-2)}
+        </p>
         <div className="time_progressbarContainer">
-          <div style={{ width: "40%" }} className="time_progressBar"></div>
+          <div
+            style={{ width: `${progress}%` }}
+            className="time_progressBar"
+          ></div>
         </div>
         <p className="controlsTime">
-    {Math.floor(currentTime / 60) + ":" + ("0" + Math.floor(currentTime % 60)).slice(-2)}
-</p>
-
+          {Math.floor(videoTime / 60) +
+            ":" +
+            ("0" + Math.floor(videoTime % 60)).slice(-2)}
+        </p>
       </div>
     </div>
   );
